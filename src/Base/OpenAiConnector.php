@@ -3,6 +3,7 @@
 namespace KrZar\LaravelOpenAiApi\Base;
 
 use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -31,21 +32,31 @@ class OpenAiConnector
         );
     }
 
+    /**
+     * @param RequestFileAttach|RequestFileAttach[]|null $fileAttach
+     * @throws ConnectionException
+     */
     protected function post(
         ApiVersion $apiVersion,
         string $endpoint,
         array $data = [],
-        ?RequestFileAttach $fileAttach = null,
+        RequestFileAttach|array|null $fileAttach = null,
     ): PromiseInterface|Response
     {
         $request = $this->request();
 
         if ($fileAttach) {
-            $request->attach(
-                $fileAttach->key,
-                $fileAttach->file,
-                $fileAttach->file->getFilename(),
-            );
+            if (!is_array($fileAttach)) {
+                $fileAttach = [$fileAttach];
+            }
+
+            foreach ($fileAttach as $fileAttachItem) {
+                $request->attach(
+                    $fileAttachItem->key,
+                    $fileAttachItem->file,
+                    $fileAttachItem->file->getFilename(),
+                );
+            }
         }
 
         return $this->request()->post(

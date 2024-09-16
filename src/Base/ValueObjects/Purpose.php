@@ -1,6 +1,6 @@
 <?php
 
-namespace KrZar\LaravelOpenAiApi\Files\ValueObjects;
+namespace KrZar\LaravelOpenAiApi\Base\ValueObjects;
 
 enum Purpose: string
 {

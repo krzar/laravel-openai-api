@@ -1,6 +1,6 @@
 <?php
 
-namespace KrZar\LaravelOpenAiApi\Files\Responses;
+namespace KrZar\LaravelOpenAiApi\Uploads\Responses\DTO;
 
 use Illuminate\Support\Carbon;
 use KrZar\ArrayDto\ArrayDto;
@@ -8,13 +8,13 @@ use KrZar\ArrayDto\Casts\ClosureCast;
 use KrZar\ArrayDto\Casts\NameCast;
 use KrZar\LaravelOpenAiApi\Base\ValueObjects\Purpose;
 
-class FileResponse extends ArrayDto
+class UploadFile extends ArrayDto
 {
     public string $id;
-    public int $bytes;
-    public string $createdAt;
-    public string $filename;
     public string $object;
+    public int $bytes;
+    public Carbon $createdAt;
+    public string $filename;
     public Purpose $purpose;
 
     protected function casts(): array

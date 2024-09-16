@@ -7,9 +7,9 @@ use KrZar\LaravelOpenAiApi\Base\DTO\RequestFileAttach;
 use KrZar\LaravelOpenAiApi\Base\OpenAiConnector;
 use KrZar\LaravelOpenAiApi\Base\Responses\DeletionStatusResponse;
 use KrZar\LaravelOpenAiApi\Base\ValueObjects\ApiVersion;
+use KrZar\LaravelOpenAiApi\Base\ValueObjects\Purpose;
 use KrZar\LaravelOpenAiApi\Files\Responses\FileResponse;
 use KrZar\LaravelOpenAiApi\Files\Responses\FilesListResponse;
-use KrZar\LaravelOpenAiApi\Files\ValueObjects\Purpose;
 
 class FilesConnector extends OpenAiConnector
 {

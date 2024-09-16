@@ -1,21 +1,25 @@
 <?php
 
-namespace KrZar\LaravelOpenAiApi\Files\Responses;
+namespace KrZar\LaravelOpenAiApi\Uploads\Responses;
 
 use Illuminate\Support\Carbon;
 use KrZar\ArrayDto\ArrayDto;
 use KrZar\ArrayDto\Casts\ClosureCast;
 use KrZar\ArrayDto\Casts\NameCast;
 use KrZar\LaravelOpenAiApi\Base\ValueObjects\Purpose;
+use KrZar\LaravelOpenAiApi\Uploads\Responses\DTO\UploadFile;
 
-class FileResponse extends ArrayDto
+class UploadResponse extends ArrayDto
 {
     public string $id;
-    public int $bytes;
-    public string $createdAt;
+    public Carbon $createdAt;
     public string $filename;
-    public string $object;
+    public int $bytes;
     public Purpose $purpose;
+    public string $status;
+    public Carbon $expiresAt;
+    public string $object;
+    public UploadFile $file;
 
     protected function casts(): array
     {
@@ -25,6 +29,10 @@ class FileResponse extends ArrayDto
                 new ClosureCast(fn(int $value) => Carbon::createFromTimestamp($value))
             ],
             'purpose' => new ClosureCast(fn(string $value) => Purpose::from($value)),
+            'expiresAt' => [
+                new NameCast('expires_at'),
+                new ClosureCast(fn(int $value) => Carbon::createFromTimestamp($value))
+            ],
         ];
     }
 }
