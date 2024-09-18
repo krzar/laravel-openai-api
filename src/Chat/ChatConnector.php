@@ -35,37 +35,44 @@ class ChatConnector extends OpenAiConnector
         ?int $topP = null,
         ?ToolsCollection $tools = null,
         Tool|ToolChoice|null $toolChoice = null,
-        ?bool $parallelToolCalls = null,
+        bool $parallelToolCalls = true,
         ?string $user = null,
     ): ChatCompletionResponse
     {
+        $parameters = [
+            'messages' => $messages->map(
+                fn (ChatMessage $message) => $message->toArray()
+            )->toArray(),
+            'model' => $model->value,
+            'frequency_penalty' => $frequencyPenalty,
+            'logit_bias' => $logitBias,
+            'logprobs' => $logProbs,
+            'top_logprobs' => $topLogProbs,
+            'max_tokens' => $maxTokens,
+            'n' => $choicesNumber,
+            'presence_penalty' => $presencePenalty,
+            'seed' => $seed,
+            'service_tier' => $serviceTier?->value,
+            'stop' => $stop,
+            'stream' => $stream,
+            'stream_options' => $streamIncludeUsage ? [
+                'include_usage' => true
+            ] : null,
+            'temperature' => $temperature,
+            'top_p' => $topP,
+            'user' => $user,
+        ];
+
+        if ($tools && !$tools->isEmpty()) {
+            $parameters['tools'] = $tools->toArray();
+            $parameters['tool_choice'] = $toolChoice?->toArray();
+            $parameters['parallel_tool_calls'] = $parallelToolCalls;
+        }
+
         $response = $this->post(
             ApiVersion::V1,
             'chat/completions',
-            [
-                'messages' => $messages->map(
-                    fn (ChatMessage $message) => $message->toArray()
-                )->toArray(),
-                'model' => $model->value,
-                'frequency_penalty' => $frequencyPenalty,
-                'logit_bias' => $logitBias,
-                'logprobs' => $logProbs,
-                'top_logprobs' => $topLogProbs,
-                'max_tokens' => $maxTokens,
-                'n' => $choicesNumber,
-                'presence_penalty' => $presencePenalty,
-                'seed' => $seed,
-                'service' => $serviceTier?->value,
-                'stop' => $stop,
-                'stream' => $stream,
-                'stream_include_all' => $streamIncludeUsage,
-                'temperature' => $temperature,
-                'top_p' => $topP,
-                'tools' => $tools?->toArray(),
-                'tool_choice' => $toolChoice?->toArray(),
-                'parallel_tool_calls' => $parallelToolCalls,
-                'user' => $user,
-            ]
+            $parameters,
         )->json();
 
         return ChatCompletionResponse::create($response);
