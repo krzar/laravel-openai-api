@@ -6,10 +6,10 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use KrZar\LaravelOpenAiApi\Base\DTO\RequestFileAttach;
 use KrZar\LaravelOpenAiApi\Base\ValueObjects\ApiVersion;
-use function KrZar\LaravelOpenAiApi\config;
 
 class OpenAiConnector
 {
@@ -17,7 +17,7 @@ class OpenAiConnector
     private string $apiKey = '';
     public function __construct()
     {
-        $this->apiKey = config('openai.api_key');
+        $this->apiKey = Config::get('openai.api_key');
     }
 
     protected function get(
