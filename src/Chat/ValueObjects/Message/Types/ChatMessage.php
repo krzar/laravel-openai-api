@@ -18,12 +18,12 @@ abstract class ChatMessage
             case MessageRole::USER:
                 return new UserMessage(
                     content: $data['content'],
-                    name: $data['name'],
+                    name: $data['name'] ?? null,
                 );
             case MessageRole::SYSTEM:
                 return new SystemMessage(
                     content: $data['content'],
-                    name: $data['name'],
+                    name: $data['name'] ?? null,
                 );
             case MessageRole::TOOL:
                 return new ToolMessage(
@@ -39,8 +39,8 @@ abstract class ChatMessage
                 return new AssistantMessage(
                     content: $data['content'],
                     refusal: $data['refusal'],
-                    name: $data['name'],
-                    toolCalls: ToolCallsCollection::fromArray($data['tool_calls']),
+                    name: $data['name'] ?? null,
+                    toolCalls: isset($data['tool_calls']) ? ToolCallsCollection::fromArray($data['tool_calls']) : null,
                 );
         }
 
